@@ -1,0 +1,78 @@
+{
+  "name": "inkdown",
+  "productName": "Inkdown",
+  "version": "1.0.0",
+  "description": "A beautiful Markdown editor for macOS",
+  "author": "Foolica",
+  "license": "MIT",
+  "main": "electron/main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "start": "npm run build && electron .",
+    "electron": "electron .",
+    "icon": "node scripts/make-icon.mjs",
+    "pack": "npm run build && electron-builder --dir",
+    "dist": "npm run build && electron-builder"
+  },
+  "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
+    "electron": "^34.2.0",
+    "electron-builder": "^25.1.8",
+    "vite": "^6.1.0"
+  },
+  "dependencies": {
+    "@tiptap/core": "^2.11.5",
+    "@tiptap/extension-code-block-lowlight": "^2.11.5",
+    "@tiptap/extension-highlight": "^2.11.5",
+    "@tiptap/extension-image": "^2.11.5",
+    "@tiptap/extension-link": "^2.11.5",
+    "@tiptap/extension-placeholder": "^2.11.5",
+    "@tiptap/extension-table": "^2.11.5",
+    "@tiptap/extension-table-cell": "^2.11.5",
+    "@tiptap/extension-table-header": "^2.11.5",
+    "@tiptap/extension-table-row": "^2.11.5",
+    "@tiptap/extension-task-item": "^2.11.5",
+    "@tiptap/extension-task-list": "^2.11.5",
+    "@tiptap/extension-typography": "^2.11.5",
+    "@tiptap/extension-underline": "^2.11.5",
+    "@tiptap/pm": "^2.11.5",
+    "@tiptap/starter-kit": "^2.11.5",
+    "lowlight": "^3.3.0",
+    "tiptap-markdown": "^0.8.10"
+  },
+  "build": {
+    "appId": "it.foolica.inkdown",
+    "productName": "Inkdown",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "electron/**/*",
+      "dist/**/*",
+      "package.json"
+    ],
+    "mac": {
+      "target": [
+        { "target": "dmg", "arch": "universal" }
+      ],
+      "category": "public.app-category.productivity",
+      "icon": "build/icon.icns",
+      "darkModeSupport": true,
+      "identity": null,
+      "hardenedRuntime": false
+    },
+    "dmg": {
+      "title": "${productName} ${version}",
+      "icon": "build/icon.icns",
+      "background": "build/background.png",
+      "iconSize": 100,
+      "window": { "width": 620, "height": 430 },
+      "contents": [
+        { "x": 165, "y": 215, "type": "file" },
+        { "x": 455, "y": 215, "type": "link", "path": "/Applications" },
+        { "x": 310, "y": 360, "type": "file", "path": "build/Leggimi - Prima apertura.txt" }
+      ]
+    }
+  }
+}

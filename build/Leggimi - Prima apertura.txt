@@ -1,0 +1,68 @@
+Inkdown - Editor Markdown
+Istruzioni per la prima apertura
+
+Ciao! Grazie per provare Inkdown.
+
+Questa app e' gratuita e l'ha creata un amico (non e' un programma scaricato
+chissa' dove). E' completamente sicura: non e' un virus ne' malware. L'unico
+motivo per cui macOS mostra un avviso al primo avvio e' che l'app non e'
+"autenticata" da Apple (la cosiddetta notarizzazione), un passaggio che
+richiede un account sviluppatore a pagamento. Per questo, solo la prima volta,
+devi dare tu il permesso di aprirla.
+
+Funziona sia sui Mac con processore Intel sia sui Mac con Apple Silicon
+(chip M1, M2, M3, M4 e successivi).
+
+
+========================================
+PASSO 1 - Installazione
+========================================
+
+Trascina l'icona di Inkdown dentro la cartella "Applicazioni" (Applications)
+che vedi in questa stessa finestra.
+
+
+========================================
+PASSO 2 - Prima apertura (metodo consigliato)
+========================================
+
+Su macOS 15 (Sequoia) e macOS 26 la procedura e' questa:
+
+1. Apri la cartella "Applicazioni" e fai doppio clic su Inkdown.
+2. macOS blocca l'avvio e mostra un avviso. Premi pure "Fine" (NON premere
+   "Sposta nel cestino"!). E' normale, succede solo la prima volta.
+3. Apri il menu Apple () in alto a sinistra e scegli "Impostazioni di Sistema".
+4. Vai su "Privacy e sicurezza".
+5. Scorri la pagina fino in fondo, alla sezione "Sicurezza": troverai un
+   messaggio che dice che Inkdown e' stato bloccato.
+6. Clicca sul pulsante "Apri comunque".
+7. Conferma con il Touch ID oppure con la tua password.
+8. Comparira' un ultimo avviso: clicca di nuovo su "Apri comunque" (o "Apri").
+
+Fatto! Da adesso in poi Inkdown si aprira' normalmente con un doppio clic,
+senza piu' alcun avviso.
+
+(Nota: il pulsante "Apri comunque" compare solo dopo aver provato ad aprire
+l'app almeno una volta, e resta disponibile per circa un'ora. Se non lo vedi,
+fai di nuovo doppio clic sull'app e ricontrolla in Privacy e sicurezza.)
+
+
+========================================
+ALTERNATIVA PIU' VELOCE (per chi se la cava col Terminale)
+========================================
+
+1. Assicurati di aver gia' trascinato Inkdown in "Applicazioni".
+2. Apri l'app "Terminale" (in Applicazioni > Utility, oppure cercala con
+   Spotlight premendo Cmd + Spazio).
+3. Copia e incolla questo comando, poi premi Invio:
+
+   xattr -dr com.apple.quarantine /Applications/Inkdown.app
+
+4. Ora apri Inkdown con un doppio clic: si avviera' senza alcun avviso.
+
+
+----------------------------------------
+Per eliminare del tutto questi avvisi, l'app dovrebbe essere "notarizzata" da
+Apple, cosa che richiede un account sviluppatore Apple a pagamento.
+
+Buona scrittura!

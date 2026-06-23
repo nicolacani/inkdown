@@ -1,27 +1,27 @@
 # Inkdown
 
-Un editor di file **Markdown** per macOS dall'aspetto curato — pensato per scrivere
+Un editor di file **Markdown** per macOS dall'aspetto curato - pensato per scrivere
 e leggere `.md` con la stessa eleganza tipografica degli artifact di Claude.
 
 <p align="center">
-  <img src="assets/screenshot-light.png" width="49%" alt="Inkdown — tema chiaro" />
-  <img src="assets/screenshot-dark.png" width="49%" alt="Inkdown — tema scuro" />
+  <img src="assets/screenshot-light.png" width="49%" alt="Inkdown - tema chiaro" />
+  <img src="assets/screenshot-dark.png" width="49%" alt="Inkdown - tema scuro" />
 </p>
 
-**[⬇️ Scarica l'ultima versione](../../releases/latest)** — DMG universale per Mac
+**[⬇️ Scarica l'ultima versione](../../releases/latest)** - DMG universale per Mac
 **Intel** e **Apple Silicon**. Vedi [Scaricare l'app](#scaricare-lapp) per l'installazione.
 
 ## Cosa sa fare
 
 - **Formattazione visiva in tempo reale** (WYSIWYG): vedi grassetto, corsivo, titoli,
   liste, citazioni e codice già formattati mentre scrivi, non i simboli `**` o `#`.
-- **Barra strumenti** con: stile del paragrafo (Corpo / Titolo 1–4), **grassetto**,
+- **Barra strumenti** con: stile del paragrafo (Corpo / Titolo 1-4), **grassetto**,
   *corsivo*, sottolineato, ~~barrato~~, codice, evidenziatore, elenchi (puntato,
   numerato, attività con caselle), citazione, blocco di codice, linea, link.
 - **Dimensione del testo** regolabile con i pulsanti **A− / A+** (o ⌘− / ⌘+), con
   indicatore percentuale nella barra di stato.
 - **Tema chiaro e scuro** e scelta del carattere (sans / serif).
-- **Apre e salva veri file `.md`** — niente formati proprietari. Avvisa prima di
+- **Apre e salva veri file `.md`** - niente formati proprietari. Avvisa prima di
   scartare modifiche non salvate.
 - **Trova e sostituisci** (⌘F): conteggio risultati, precedente/successivo,
   sensibilità maiuscole, sostituisci singolo o tutti.
@@ -90,10 +90,10 @@ npm run pack         # crea release/mac-arm64/Inkdown.app
 
 Struttura:
 
-- `electron/main.js` — processo principale: finestra, menu, dialoghi apri/salva, file `.md`.
-- `electron/preload.js` — ponte sicuro (contextBridge) tra interfaccia e processo principale.
-- `src/` — interfaccia: `index.html`, `style.css` (la tipografia), `main.js` (editor TipTap).
-- `scripts/make-icon.mjs` — genera l'icona dell'app.
+- `electron/main.js` - processo principale: finestra, menu, dialoghi apri/salva, file `.md`.
+- `electron/preload.js` - ponte sicuro (contextBridge) tra interfaccia e processo principale.
+- `src/` - interfaccia: `index.html`, `style.css` (la tipografia), `main.js` (editor TipTap).
+- `scripts/make-icon.mjs` - genera l'icona dell'app.
 
 ### Nota sull'avvio in sviluppo
 

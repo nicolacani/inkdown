@@ -126,7 +126,7 @@ function refreshState() {
   const chars = text.length;
   els.statusWords.textContent = `${words} parol${words === 1 ? 'a' : 'e'} · ${chars} caratteri`;
 
-  document.title = `${dirty ? '• ' : ''}${name} — Inkdown`;
+  document.title = `${dirty ? '• ' : ''}${name} - Inkdown`;
   window.inkdown.setTitle(`${dirty ? '• ' : ''}${name}`);
   window.inkdown.setEdited(dirty);
   window.inkdown.setRepresentedFile(currentPath || '');

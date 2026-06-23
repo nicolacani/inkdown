@@ -1,5 +1,5 @@
 /* ===========================================================================
-   Inkdown — a beautiful Markdown editor
+   Inkdown - a beautiful Markdown editor
    =========================================================================== */
 
 :root {
@@ -547,7 +547,7 @@ html[data-theme="dark"] .search-match { background: rgba(255, 213, 0, 0.28); }
 #code-copy.done { color: #fff; background: var(--accent); border-color: var(--accent); }
 
 /* ---------------------------------------------------------------------------
-   Print / PDF export — clean document, always light, no app chrome
+   Print / PDF export - clean document, always light, no app chrome
    --------------------------------------------------------------------------- */
 
 @media print {

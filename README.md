@@ -3,8 +3,13 @@
 Un editor di file **Markdown** per macOS dall'aspetto curato — pensato per scrivere
 e leggere `.md` con la stessa eleganza tipografica degli artifact di Claude.
 
-L'app è **già installata** in `/Applications/Inkdown.app`: aprila da Launchpad o dal
-Finder, oppure fai doppio clic su un file `.md`.
+<p align="center">
+  <img src="assets/screenshot-light.png" width="49%" alt="Inkdown — tema chiaro" />
+  <img src="assets/screenshot-dark.png" width="49%" alt="Inkdown — tema scuro" />
+</p>
+
+**[⬇️ Scarica l'ultima versione](../../releases/latest)** — DMG universale per Mac
+**Intel** e **Apple Silicon**. Vedi [Scaricare l'app](#scaricare-lapp) per l'installazione.
 
 ## Cosa sa fare
 
@@ -41,10 +46,19 @@ Finder, oppure fai doppio clic su un file `.md`.
 
 ## Scaricare l'app
 
-L'ultima versione pronta all'uso è nella pagina **[Releases](../../releases)**:
-scarica `Inkdown-x.y.z-universal.dmg`. È **universale** (gira su Mac Intel e
-Apple Silicon), contiene l'app, l'alias "Applicazioni" per il trascinamento e
-un file **"Leggimi - Prima apertura"** con le istruzioni.
+Scarica l'ultima versione dalla pagina **[Releases](../../releases/latest)**:
+`Inkdown-x.y.z-universal.dmg` (universale, gira su Mac **Intel** e **Apple Silicon**).
+
+1. Apri il DMG e trascina **Inkdown** nella cartella **Applicazioni**.
+2. L'app non è notarizzata da Apple, quindi al primo avvio macOS 15 / 26 la blocca.
+   Fai doppio clic, premi **Fine**, poi apri **Impostazioni di Sistema → Privacy e
+   sicurezza**, scorri in fondo e clicca **"Apri comunque"** e conferma.
+   In alternativa, nel **Terminale**:
+   ```bash
+   xattr -dr com.apple.quarantine /Applications/Inkdown.app
+   ```
+
+Le stesse istruzioni sono nel file **"Leggimi - Prima apertura"** dentro il DMG.
 
 ## Distribuire / creare un DMG
 
@@ -55,27 +69,13 @@ bash scripts/make-dmg.sh
 ```
 
 Lo script costruisce in una cartella locale (fuori da iCloud, per evitare errori
-di hdiutil), firma ad-hoc l'intero bundle e ricrea il DMG firmato.
+di hdiutil), firma ad-hoc in profondità l'intero bundle e ricrea il DMG firmato,
+**universale** (Intel + Apple Silicon).
 
-### Cosa deve fare chi riceve il DMG
-
-L'app **non è notarizzata da Apple** (la notarizzazione richiede un account
-sviluppatore a pagamento, ~99 €/anno). Su macOS 15+ / 26 il vecchio "tasto destro
-→ Apri" **non basta più**. Alla prima apertura il destinatario deve:
-
-1. Trascinare Inkdown in **Applicazioni**.
-2. Fare doppio clic (macOS blocca: premere **Fine**, non "Sposta nel cestino").
-3. Aprire **Impostazioni di Sistema → Privacy e sicurezza**, scorrere in fondo e
-   cliccare **"Apri comunque"**, poi confermare con Touch ID/password.
-
-In alternativa, una sola riga nel **Terminale**:
-
-```bash
-xattr -dr com.apple.quarantine /Applications/Inkdown.app
-```
-
-Tutto questo è spiegato nel "Leggimi" dentro il DMG. Per togliere del tutto
-l'avviso servirebbe la notarizzazione Apple (account sviluppatore a pagamento).
+L'app non è notarizzata da Apple (la notarizzazione richiede un account
+sviluppatore a pagamento, ~99 €/anno), quindi chi la riceve segue la stessa
+procedura di [prima apertura](#scaricare-lapp). Solo la notarizzazione eliminerebbe
+del tutto l'avviso di macOS al primo avvio.
 
 ## Per gli sviluppatori
 

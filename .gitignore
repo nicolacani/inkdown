@@ -1,0 +1,18 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+release/
+build/icon.iconset/
+
+# Distributable artifacts (shipped via GitHub Releases, not committed)
+*.dmg
+*.dmg.blockmap
+
+# macOS / logs
+.DS_Store
+*.log
+
+# Tooling / session state
+.claude/

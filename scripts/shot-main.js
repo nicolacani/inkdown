@@ -37,9 +37,18 @@ app.whenReady().then(async () => {
   await wait(400);
   fs.writeFileSync('/tmp/inkdown-find.png', (await win.webContents.capturePage()).toPNG());
 
+  // Settings panel (light theme).
   await win.webContents.executeJavaScript(
     "document.querySelector('#findbar').classList.remove('show');" +
     "window.__search.doFind('');" +
+    "document.documentElement.setAttribute('data-theme','light');" +
+    "document.querySelector('#settings-overlay').classList.add('show');"
+  );
+  await wait(350);
+  fs.writeFileSync('/tmp/inkdown-settings.png', (await win.webContents.capturePage()).toPNG());
+
+  await win.webContents.executeJavaScript(
+    "document.querySelector('#settings-overlay').classList.remove('show');" +
     "document.documentElement.setAttribute('data-theme','dark')"
   );
   await wait(300);

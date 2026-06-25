@@ -39,6 +39,16 @@ function scheduleSaveBounds() {
 // File path queued from "open with" before the window is ready.
 let pendingOpenPath = null;
 
+// True while the app is quitting (⌘Q / menu Quit), so the window-close handler
+// knows to quit the whole app instead of just closing the window (⌘W).
+let isQuitting = false;
+
+// Mirrored from the renderer (via IPC) so the close handler can decide
+// synchronously whether there are unsaved changes — doing async work inside a
+// preventDefault-ed close during quit leaves the app unable to actually exit.
+let docDirty = false;
+let docPath = null;
+
 // ---------------------------------------------------------------------------
 // Window
 // ---------------------------------------------------------------------------
@@ -80,16 +90,32 @@ function createWindow() {
   mainWindow.on('resize', scheduleSaveBounds);
   mainWindow.on('move', scheduleSaveBounds);
 
-  // Intercept close to offer saving unsaved changes.
-  mainWindow.on('close', async (e) => {
-    saveBounds();
-    if (mainWindow && mainWindow.__forceClose) return;
-    e.preventDefault();
-    const ok = await maybeSaveBeforeClosing();
-    if (ok) {
-      mainWindow.__forceClose = true;
-      mainWindow.close();
+  // Intercept close to offer saving unsaved changes, and to tell apart
+  // "close window" (⌘W) from "quit app" (⌘Q).
+  mainWindow.on('close', (e) => {
+    if (mainWindow.__readyToClose) return; // already handled
+    if (!docDirty) {
+      // Nothing to save: let the close/quit proceed normally. This is the
+      // common ⌘Q / ⌘W path and must NOT be intercepted, or quit gets stuck.
+      saveBounds();
+      return;
     }
+    // Unsaved changes: intercept to prompt, then finish closing/quitting.
+    e.preventDefault();
+    (async () => {
+      const ok = await maybeSaveBeforeClosing();
+      if (!ok) {
+        isQuitting = false; // user cancelled — abort any in-progress quit
+        return;
+      }
+      saveBounds();
+      mainWindow.__readyToClose = true;
+      if (isQuitting) {
+        app.exit(0); // ⌘Q: quit the whole app (saving already handled above)
+      } else {
+        mainWindow.destroy(); // ⌘W: close the window, app stays open
+      }
+    })();
   });
 
   // Open external links in the default browser, not inside the app.
@@ -129,8 +155,7 @@ function openPathInRenderer(filePath) {
 
 /** Returns true if it is safe to proceed (saved or discarded), false to cancel. */
 async function maybeSaveBeforeClosing() {
-  const state = await rendererState();
-  if (!state.dirty) return true;
+  if (!docDirty) return true;
 
   const { response } = await dialog.showMessageBox(mainWindow, {
     type: 'warning',
@@ -138,8 +163,8 @@ async function maybeSaveBeforeClosing() {
     defaultId: 0,
     cancelId: 2,
     message: 'Vuoi salvare le modifiche?',
-    detail: state.path
-      ? `Le modifiche a "${path.basename(state.path)}" andranno perse se non le salvi.`
+    detail: docPath
+      ? `Le modifiche a "${path.basename(docPath)}" andranno perse se non le salvi.`
       : 'Le modifiche al documento andranno perse se non le salvi.',
   });
 
@@ -243,6 +268,8 @@ function buildMenu() {
           label: app.name,
           submenu: [
             { role: 'about', label: 'Informazioni su Inkdown' },
+            { type: 'separator' },
+            { label: 'Impostazioni…', accelerator: 'CmdOrCtrl+,', click: () => sendFormat('settings') },
             { type: 'separator' },
             { role: 'hide', label: 'Nascondi Inkdown' },
             { role: 'hideOthers', label: 'Nascondi altre' },
@@ -348,8 +375,7 @@ ipcMain.handle('app:save', () => doSave(false));
 ipcMain.handle('app:saveAs', () => doSave(true));
 
 ipcMain.handle('app:confirmDiscard', async () => {
-  const state = await rendererState();
-  if (!state.dirty) return true;
+  if (!docDirty) return true;
   const { response } = await dialog.showMessageBox(mainWindow, {
     type: 'warning',
     buttons: ['Salva', 'Non salvare', 'Annulla'],
@@ -372,13 +398,14 @@ ipcMain.on('title:update', (_e, title) => {
 });
 
 ipcMain.on('document:represented', (_e, filePath) => {
+  docPath = filePath || null;
   if (mainWindow && process.platform === 'darwin') {
     mainWindow.setRepresentedFilename(filePath || '');
-    mainWindow.setDocumentEdited(false);
   }
 });
 
 ipcMain.on('document:edited', (_e, edited) => {
+  docDirty = !!edited;
   if (mainWindow && process.platform === 'darwin') {
     mainWindow.setDocumentEdited(!!edited);
   }
@@ -424,6 +451,10 @@ if (!gotLock) {
     });
   });
 }
+
+app.on('before-quit', () => {
+  isQuitting = true;
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();

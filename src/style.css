@@ -547,6 +547,75 @@ html[data-theme="dark"] .search-match { background: rgba(255, 213, 0, 0.28); }
 #code-copy.done { color: #fff; background: var(--accent); border-color: var(--accent); }
 
 /* ---------------------------------------------------------------------------
+   Settings panel
+   --------------------------------------------------------------------------- */
+
+#settings-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(20, 18, 15, 0.34);
+  -webkit-app-region: no-drag;
+}
+#settings-overlay.show { display: flex; }
+
+#settings-panel {
+  width: 384px;
+  max-width: calc(100vw - 40px);
+  background: var(--bg-elevated);
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  padding: 18px 20px 22px;
+  font-family: var(--sans);
+  color: var(--text);
+}
+
+.set-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.set-title { font-size: 17px; font-weight: 680; color: var(--heading); }
+.set-x {
+  width: 30px; height: 30px; border: none; border-radius: 8px;
+  background: transparent; color: var(--text-dim); cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.set-x:hover { background: var(--btn-hover); color: var(--text); }
+.set-x svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.set-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 13px 0; border-top: 1px solid var(--rule);
+}
+.set-label { font-size: 14px; color: var(--text-soft); }
+
+.set-seg { display: inline-flex; background: var(--code-bg); border-radius: 9px; padding: 3px; gap: 2px; }
+.set-seg button {
+  border: none; background: transparent; color: var(--text-soft);
+  font-family: var(--sans); font-size: 13px; font-weight: 600;
+  padding: 6px 12px; border-radius: 7px; cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.set-seg button:hover { color: var(--text); }
+.set-seg button.active {
+  background: var(--bg-elevated);
+  color: var(--accent);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.set-size { display: inline-flex; align-items: center; gap: 8px; }
+.set-size button {
+  border: 1px solid var(--rule); background: transparent; color: var(--text-soft);
+  font-family: var(--sans); font-size: 13px; font-weight: 600;
+  min-width: 36px; padding: 5px 9px; border-radius: 7px; cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.set-size button:hover { background: var(--btn-hover); color: var(--text); }
+#set-size-val { font-size: 13px; color: var(--text-dim); min-width: 44px; text-align: center; font-variant-numeric: tabular-nums; }
+
+/* ---------------------------------------------------------------------------
    Print / PDF export - clean document, always light, no app chrome
    --------------------------------------------------------------------------- */
 

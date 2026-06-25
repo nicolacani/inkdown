@@ -188,18 +188,29 @@ async function newDocument() {
 // View preferences (theme, font, scale)
 // ---------------------------------------------------------------------------
 
-function applyTheme(theme) {
-  document.documentElement.setAttribute('data-theme', theme);
-  localStorage.setItem(STORE.theme, theme);
+const mql = window.matchMedia('(prefers-color-scheme: dark)');
+let themePref = 'system'; // 'light' | 'dark' | 'system'
+
+function effectiveTheme() {
+  return themePref === 'system' ? (mql.matches ? 'dark' : 'light') : themePref;
 }
+function applyTheme(pref) {
+  themePref = pref === 'light' || pref === 'dark' || pref === 'system' ? pref : 'system';
+  localStorage.setItem(STORE.theme, themePref);
+  document.documentElement.setAttribute('data-theme', effectiveTheme());
+  updateSettingsUI();
+}
+mql.addEventListener('change', () => {
+  if (themePref === 'system') document.documentElement.setAttribute('data-theme', effectiveTheme());
+});
 function toggleTheme() {
-  const cur = document.documentElement.getAttribute('data-theme') || 'light';
-  applyTheme(cur === 'light' ? 'dark' : 'light');
+  applyTheme(effectiveTheme() === 'light' ? 'dark' : 'light');
 }
 
 function applyDocFont(font) {
-  document.documentElement.setAttribute('data-doc-font', font);
+  document.documentElement.setAttribute('data-doc-font', font === 'serif' ? 'serif' : 'sans');
   localStorage.setItem(STORE.font, font);
+  updateSettingsUI();
 }
 function toggleFont() {
   const cur = document.documentElement.getAttribute('data-doc-font') || 'sans';
@@ -212,14 +223,14 @@ function applyScale(s) {
   document.documentElement.style.setProperty('--doc-font-scale', String(scale));
   localStorage.setItem(STORE.scale, String(scale));
   if (els.statusZoom) els.statusZoom.textContent = Math.round(scale * 100) + '%';
+  updateSettingsUI();
 }
 function fontUp() { applyScale(scale + 0.1); }
 function fontDown() { applyScale(scale - 0.1); }
 function fontReset() { applyScale(1); }
 
 function restorePrefs() {
-  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-  applyTheme(localStorage.getItem(STORE.theme) || (prefersDark ? 'dark' : 'light'));
+  applyTheme(localStorage.getItem(STORE.theme) || 'system');
   applyDocFont(localStorage.getItem(STORE.font) || 'sans');
   applyScale(parseFloat(localStorage.getItem(STORE.scale)) || 1);
 }
@@ -485,6 +496,7 @@ function run(cmd) {
     case 'fontReset': fontReset(); break;
     case 'toggleTheme': toggleTheme(); break;
     case 'toggleFont': toggleFont(); break;
+    case 'settings': openSettings(); break;
     case 'find': openFind(); break;
     case 'new': newDocument(); break;
     default: break;
@@ -545,6 +557,61 @@ window.addEventListener('drop', async (e) => {
     if (!ok) return;
     const text = await file.text();
     loadDocument(text, window.inkdown.getDroppedFilePath(file));
+  }
+});
+
+// ---------------------------------------------------------------------------
+// Settings panel
+// ---------------------------------------------------------------------------
+
+const settingsOverlay = document.querySelector('#settings-overlay');
+
+function updateSettingsUI() {
+  const themeSeg = document.querySelector('#set-theme');
+  if (themeSeg) {
+    themeSeg.querySelectorAll('button').forEach((b) =>
+      b.classList.toggle('active', b.dataset.themeVal === themePref));
+  }
+  const fontSeg = document.querySelector('#set-font');
+  if (fontSeg) {
+    const f = document.documentElement.getAttribute('data-doc-font') || 'sans';
+    fontSeg.querySelectorAll('button').forEach((b) =>
+      b.classList.toggle('active', b.dataset.fontVal === f));
+  }
+  const sizeVal = document.querySelector('#set-size-val');
+  if (sizeVal) sizeVal.textContent = Math.round(scale * 100) + '%';
+}
+
+function openSettings() {
+  updateSettingsUI();
+  settingsOverlay.classList.add('show');
+  settingsOverlay.setAttribute('aria-hidden', 'false');
+}
+function closeSettings() {
+  settingsOverlay.classList.remove('show');
+  settingsOverlay.setAttribute('aria-hidden', 'true');
+  editor.commands.focus();
+}
+
+document.querySelector('#set-theme').addEventListener('click', (e) => {
+  const b = e.target.closest('button');
+  if (b) applyTheme(b.dataset.themeVal);
+});
+document.querySelector('#set-font').addEventListener('click', (e) => {
+  const b = e.target.closest('button');
+  if (b) applyDocFont(b.dataset.fontVal);
+});
+document.querySelector('#set-size-down').addEventListener('click', fontDown);
+document.querySelector('#set-size-up').addEventListener('click', fontUp);
+document.querySelector('#set-size-reset').addEventListener('click', fontReset);
+document.querySelector('#set-close').addEventListener('click', closeSettings);
+settingsOverlay.addEventListener('mousedown', (e) => {
+  if (e.target === settingsOverlay) closeSettings();
+});
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && settingsOverlay.classList.contains('show')) {
+    e.preventDefault();
+    closeSettings();
   }
 });
 

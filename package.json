@@ -52,6 +52,13 @@
       "dist/**/*",
       "package.json"
     ],
+    "fileAssociations": [
+      {
+        "ext": ["md", "markdown", "mdown", "mkd", "mkdn", "mdwn", "mdx", "mdtext", "mdtxt"],
+        "name": "Markdown Document",
+        "role": "Editor"
+      }
+    ],
     "mac": {
       "target": [
         { "target": "dmg", "arch": "universal" }
